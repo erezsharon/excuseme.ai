@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ExcuseMe!</title>
+    <style>
+ 
+        body {
+            background-image: url("https://images.unsplash.com/photo-1634912314704-c646c586b131?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80");
+            background-size: cover;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 4em;
+            text-shadow: 2px 2px #000000;
+        }
+
+        button {
+            display: block;
+            margin: 0 auto;
+            padding: 1em 2em;
+            font-size: 1.5em;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        #excuse-box {
+            margin: 0 auto;
+            width: 80%;
+            height: 15em;
+            padding: 1em;
+            background-color: white;
+            color: black;
+            border: none;
+            font-size: 1.2em;
+            overflow-y: auto;
+            display: none;
+        }
+
+        #notification {
+            position: fixed;
+            right: 10px;
+            bottom: 10px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            font-size: 1.2em;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>With AI it's never your fault</h1>
+    <button id="excuse-button">ExcuseMe!</button>
+    <div id="excuse-box"></div>
+    <div id="notification">Prompt sent!</div>
+
+    <script>
+        const excuseButton = document.getElementById("excuse-button");
+        excuseButton.addEventListener("click", function () {
+            // send the prompt to ChatGPT
+            const prompt = "Write a three sentance long and absurd excuse as to why I was late for work";
+            // You can use your own method here to send the prompt to the ChatGPT site
+            // and get the response
+            // Once you have the response you can display it in the excuse-box
+            var xhr = new XMLHttpRequest();
+           
+			xhr.open("POST", "https://api.openai.com/v1/engines/text-davinci-003/completions", true);
+            xhr.setRequestHeader("Content-type", "application/json");
+            xhr.setRequestHeader("Authorization", "Bearer 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");
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    // alert(" in if,responseText: " + xhr.responseText );
+				   var json = JSON.parse(xhr.responseText);
+                    var excuse = json.choices[0].text;
+					document.getElementById("excuse-box").innerHTML = excuse;
+					document.getElementById("excuse-box").style.display = "block";
+				}
+			};
+			var data = JSON.stringify({
+			prompt: prompt,
+			max_tokens: 100,
+			temperature: 0.5
+			});
+            // alert(" 3cc" );
+			xhr.send(data);
+            
+			// display the notification
+			document.getElementById("notification").style.display = "block";
+			setTimeout(function () {
+			document.getElementById("notification").style.display = "none";
+			}, 2000);
+		});
+	</script>
+
+	</body>
+</html>
+```
